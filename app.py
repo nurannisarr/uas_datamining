@@ -11,7 +11,7 @@ import seaborn as sns
 import pickle 
 
 #import model 
-svm = pickle.load(open('SVC.pkl','rb'))
+knn = pickle.load(open('knn_model.pkl','rb'))
 
 #load dataset
 data = pd.read_csv('heart_dataset.csv')
@@ -45,7 +45,7 @@ if st.checkbox("Tentang Dataset"):
 
 sns.set_style('darkgrid')
 
-#if st.checkbox('EDa'):
+#if st.checkbox('EDA'):
 #    pr =ProfileReport(data,explorative=True)
 #    st.header('**Input Dataframe**')
 #    st.write(data)
@@ -60,9 +60,9 @@ X = data.drop('output',axis=1)
 y = data['output']
 X_train, X_test,y_train,y_test = train_test_split(X,y,test_size=0.20,random_state=42)
 X_train, X_test,y_train,y_test = train_test_split(X_new,y_new,test_size=0.20,random_state=42)
-svm.fit(X_train, y_train)
+knn.fit(X_train, y_train)
 
-pickle.dump(svm, open('SVC_updated.pkl', 'wb'))
+pickle.dump(knn, open('knn_model.pkl', 'wb'))
 
 #Training Data
 if st.checkbox('Train-Test Dataset'):
@@ -108,8 +108,8 @@ user_data = user_report()
 st.subheader('Data Pasien')
 st.write(user_data)
 
-user_result = svm.predict(user_data)
-svc_score = accuracy_score(y_test,svm.predict(X_test))
+user_result = knn.predict(user_data)
+knn_score = accuracy_score(y_test,knn.predict(X_test))
 
 #output
 st.subheader('Hasilnya adalah : ')
@@ -117,8 +117,8 @@ output=''
 if user_result[0]==0:
     output='Kamu Aman'
 else:
-    output ='Kamu terkena diabetes'
+    output ='Kamu Terkena Penyakit Jantung'
 st.title(output)
 st.subheader('Model yang digunakan : \n'+option)
 st.subheader('Accuracy : ')
-st.write(str(svc_score*100)+'%')
+st.write(str(knn_score*100)+'%')
